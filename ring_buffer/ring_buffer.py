@@ -1,5 +1,3 @@
-from collections import deque
-
 class Node:
     def __init__(self, value, prev = None, next = None):
         self.value = value
@@ -18,34 +16,32 @@ class RingBuffer:
         if self.length == 5:
             new_node = Node(item)
             
+            # If self.current is None then set it to be the self.head
+            if not self.current:
+                self.current = self.head
+
             # Assigning the arrows for the new_node
-
-            print("this passes")
-            new_node.prev = self.head.prev
-
-            print("this ALSO passes")
-            new_node.next = self.head.next
+            new_node.prev = self.current.prev
+            new_node.next = self.current.next
 
 
-            # # What if the current node is the self.head? 
-            # # We need to give the new_node that title
-            # if self.current is self.head:
-            #     self.head = new_node
+            # What if the current node is the self.head? 
+            # We need to give the new_node that title
+            if self.current is self.head:
+                self.head = new_node
 
-            # # Re-assigning the arrows towards the new_node
-            # if self.current.prev is not None:
-            #     self.current.prev.next = new_node
-            # if self.current.next is not None:
-            #     self.current.next.prev = new_node          
-            # # Old node should have nothing connected towards it now
+            # Re-assigning the arrows towards the new_node
+            if self.current.prev:
+                self.current.prev.next = new_node
+            if self.current.next:
+                self.current.next.prev = new_node          
+            # Old node should have nothing connected towards it now
 
-            # # We need to change self.current to be the next node in line
-            # if self.current.next is not None:
-            #     self.current = self.current.next
-            # else: 
-            #     self.current = self.head
-
-
+            # We need to change self.current to be the next node in line
+            if self.current.next:
+                self.current = self.current.next
+            else: 
+                self.current = self.head
 
         else:
             self.length += 1
@@ -56,7 +52,6 @@ class RingBuffer:
             else: 
                 self.tail.next = new_node
                 self.tail = new_node
-                self.tail.next = None
 
     def get(self):
         current = self.head
